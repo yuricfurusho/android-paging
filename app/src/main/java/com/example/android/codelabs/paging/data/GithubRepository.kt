@@ -32,15 +32,6 @@ class GithubRepository(
     private val cache: GithubLocalCache
 ) {
 
-    // keep the last requested page. When the request is successful, increment the page number.
-    private var lastRequestedPage = 1
-
-    // LiveData of network errors.
-    private val networkErrors = MutableLiveData<String>()
-
-    // avoid triggering multiple requests in the same time
-    private var isRequestInProgress = false
-
     /**
      * Search repositories whose names match the query.
      */

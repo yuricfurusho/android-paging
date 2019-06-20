@@ -18,6 +18,7 @@ package com.example.android.codelabs.paging.data
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.LivePagedListBuilder
 import com.example.android.codelabs.paging.api.GithubService
 import com.example.android.codelabs.paging.api.searchRepos
 import com.example.android.codelabs.paging.db.GithubLocalCache
@@ -45,12 +46,17 @@ class GithubRepository(
      */
     fun search(query: String): RepoSearchResult {
         Log.d("GithubRepository", "New query: $query")
-        lastRequestedPage = 1
-        requestAndSaveData(query)
+        // lastRequestedPage = 1
+        // requestAndSaveData(query)
 
-        // Get data from the local cache
-        val data = cache.reposByName(query)
 
+        // Get data source factory from the local cache
+        val dataSourceFactory = cache.reposByName(query)
+
+        // Get the paged list
+        val data = LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE).build()
+
+        // Get the network errors exposed by the boundary callback
         return RepoSearchResult(data, networkErrors)
     }
 
